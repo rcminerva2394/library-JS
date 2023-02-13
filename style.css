@@ -1,0 +1,133 @@
+/*
+----01 TYPOGRAPHY SYSTEM
+
+
+- font-sizes (px)
+10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 / 52 / 62 / 74 / 86 / 98
+→ small screen: headline: 24px, content: 14px
+
+
+defaults:
+h1 32px (2em)
+h2 24px (1.5em)
+h3 20.8px (1.3em)
+h4 16px (1em)
+h5 12.8px (0.8em)
+h6 11.2px (0.7em)
+p 16px (1em)
+
+
+- line height
+default: 1
+
+
+- font-weight: 400;
+
+
+----02 COLORS
+Refer to colors for contrast check, and for tints and shades, refer to open color
+
+
+- Main-color:  #565497
+- tints:
+- shades:
+- Grey-color: #E7E7E7, #F1F1F1, #6A6A6A;
+- Accent-color: #0053f8;
+
+
+----03 SHADOWS
+
+
+----04 BORDER-RADIUS
+
+
+----05 WHITESPACE
+
+
+- spacing (px)
+2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+
+
+
+
+*/
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  padding: 5rem 10rem;
+  font-size: 2rem;
+}
+
+/* THE STAT NUMBERS */
+header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+h1 {
+  font-size: 3.6rem;
+  color: #565497;
+}
+
+.add-book {
+  border: 0;
+  outline: none;
+  background: none;
+  color: #0053f8;
+  display: flex;
+  align-items: center;
+  width: 5rem;
+}
+
+.stat-numbers {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 7rem;
+}
+
+.stat {
+  background-color: #f1f1f1;
+  padding: 3rem 6rem;
+  text-align: center;
+  border-radius: 1rem;
+}
+
+.num {
+  font-size: 4rem;
+}
+
+.description {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  color: #6a6a6a;
+}
+
+/* Tabular data of books */
+table {
+  width: 100%;
+  margin-top: 5rem;
+  border-collapse: collapse;
+}
+
+tr {
+  border-bottom: 1px solid #e7e7e7;
+}
+
+thead th {
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  color: #464646;
+  font-weight: 600;
+  padding: 1rem;
+}
