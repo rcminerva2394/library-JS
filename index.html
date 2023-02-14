@@ -13,7 +13,7 @@
   <body>
     <header>
       <h1>My Library</h1>
-      <button class="add-book">
+      <button class="btn btn-add-book" type="button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -62,6 +62,42 @@
         </thead>
         <tbody class="table-books-items"></tbody>
       </table>
+      <section class="add-book-container hidden">
+        <div class="modal-backdrop"></div>
+        <div class="add-book-form-wrapper">
+          <button class="btn btn-close-modal">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <form class="add-book-form">
+            <div class="add-book-inputs">
+              <label for="book-title"> Title </label>
+              <input id="book-title" type="text" class="input title" />
+              <label for="book-author"> Author </label>
+              <input id="book-author" type="text" class="input author" />
+              <label for="book-pages"> Pages </label>
+              <input id="book-pages" type="number" class="input pages" />
+            </div>
+            <div>
+              <input id="book-status" type="checkbox" class="input status" />
+              <label for="book-status"> Have you read it? </label>
+            </div>
+            <button type="submit" class="btn-submit">Submit</button>
+          </form>
+        </div>
+      </section>
     </main>
   </body>
 </html>
