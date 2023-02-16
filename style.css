@@ -85,6 +85,7 @@ h1 {
   outline: none;
   background: none;
   width: 4rem;
+  cursor: pointer;
 }
 
 .btn-add-book {
@@ -117,23 +118,43 @@ h1 {
   color: #6a6a6a;
 }
 
-/* Tabular data of books */
-table {
+/* THE BOOK LIST */
+/* Reusable grid*/
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.25fr 1fr;
+  align-items: center;
+}
+
+.books-container {
   width: 100%;
-  margin-top: 5rem;
-  border-collapse: collapse;
+  display: grid;
+  margin: 5rem 0;
 }
 
-tr {
-  border-bottom: 1px solid #e7e7e7;
-}
-
-thead th {
-  text-transform: uppercase;
-  font-size: 1.5rem;
+.books-heading {
   color: #464646;
   font-weight: 600;
+  text-transform: uppercase;
+}
+
+.books-heading,
+.book-item {
+  border-bottom: 1px solid #e7e7e7;
   padding: 1rem;
+  font-size: 1.5rem;
+  gap: 1rem;
+}
+
+.btn-del,
+.btn-edit {
+  width: 2rem;
+  color: #464646;
+  margin-right: 1rem;
+}
+
+.hasRead {
+  margin-left: 0.5rem;
 }
 
 /* Modal add book form*/
