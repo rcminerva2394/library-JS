@@ -3,15 +3,20 @@ const closeFormBtn = document.querySelector('.btn-close-modal');
 const btnAddBook = document.querySelector('.btn.btn-add-book');
 const modalBackdrop = document.querySelector('.modal-backdrop');
 const booksContainer = document.querySelector('.books-items');
-// Input values when adding a book
-const addBookInputEls = document.querySelector('.add-book-inputs');
-const bookStatus = document.querySelector('#book-status');
-let titleEl = '';
-let authorEl = '';
-let pagesEl = '';
-let haveReadEl = false;
+const addBookForm = document.querySelector('.add-book-form');
+const title = document.querySelector('#book-title');
+const author = document.querySelector('#book-author');
+const pages = document.querySelector('#book-pages');
+const haveRead = document.querySelector('#book-status');
+const numBooks = document.querySelector('.num.total-books');
+const numUnread = document.querySelector('.num.unread-books');
+const numRead = document.querySelector('.num.read-books');
+const numDeleted = document.querySelector('.num.deleted-books');
 
-// UTILITY DOM HELPER FUNCTION
+const myLibrary = [];
+let deleted = 0;
+
+/** ************ DOM HELPER FUNCTION ************ */
 const domElementFactory = (type, attributes, ...children) => {
   // type
   const domElement = document.createElement(type);
@@ -43,59 +48,18 @@ btnAddBook.addEventListener('click', showModal);
 closeFormBtn.addEventListener('click', closeModal);
 modalBackdrop.addEventListener('click', closeModal);
 
-// The input modal form values (applying event delegation)
-addBookInputEls.addEventListener('keyup', (e) => {
-  if (e.target.id === 'book-title') {
-    titleEl = e.target.value;
-  } else if (e.target.id === 'book-author') {
-    authorEl = e.target.value;
-  } else if (e.target.id === 'book-pages') {
-    pagesEl = e.target.value;
-  }
-});
-
-// Book Status
-bookStatus.addEventListener('change', function () {
-  console.log(this.checked);
-  if (this.checked) {
-    haveReadEl = true;
-  } else {
-    haveReadEl = false;
-  }
-});
-
-/** ************ OOP PART ************ */
-const myLibrary = [];
-
-const Book = function (title = '', author = '', pages = 0, haveRead = false) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.haveRead = haveRead;
-};
-
-Book.prototype.hasRead = function () {
-  this.haveRead = !this.haveRead;
-  return this;
-};
-
-const harryPotter = new Book('The Sorceror Stone', 'J.K Rowling', 1050, true);
-console.log(harryPotter);
-console.log(harryPotter.hasRead());
-console.log(harryPotter.hasRead());
-console.log(harryPotter.hasRead());
-
-// Function that will add the book instance to the myLibrary
-const addBookToLibrary = function () {
-  myLibrary.push(harryPotter);
-};
-
-console.log(addBookToLibrary());
-console.log(myLibrary);
-console.log(myLibrary[0].title);
-
+/** ***** DISPLAY BOOKS ************ */
 const displayBooks = () => {
+  booksContainer.innerHTML = '';
+  let unReadBooks = 0;
+  let readBooks = 0;
   myLibrary.forEach((book, i) => {
+    if (book.haveRead === false) {
+      unReadBooks += 1;
+    } else if (book.haveRead === true) {
+      readBooks += 1;
+    }
+
     const bookItem = domElementFactory(
       'div',
       { class: 'book-item grid' },
@@ -110,28 +74,67 @@ const displayBooks = () => {
           id: i,
           ...(book.haveRead && { checked: true }),
         }),
-        domElementFactory(
-          'span',
-          { class: 'hasRead' },
-          `${book.haveRead ? 'Read' : 'Unread'}`
-        )
+        domElementFactory('span', {}, ' Read')
       ),
-      domElementFactory(
-        'div',
-        {},
-        domElementFactory('button', { class: 'btn btn-del' }, 'del'),
-        domElementFactory('button', { class: 'btn btn-edit' }, 'edit')
-      )
+      domElementFactory('button', { class: 'btn btn-del' }, 'del')
     );
 
     booksContainer.append(bookItem);
   });
+
+  numBooks.textContent = myLibrary.length;
+  numUnread.textContent = unReadBooks;
+  numRead.textContent = readBooks;
 };
 
 displayBooks();
 
-/* 1) Work on adding the book from the input form to the myLibrary, call displayBooks
-2) Then, add event listeners for edit and delete, when edit, pop the modal form with previous input, and when submitted
-edit the whole my library and call display again
-3) Also, add event listener on the input form, that is been checkede and unchecked
-*/
+/** ************ OOP PART ************ */
+// Function constructor
+const Book = function (
+  bookTitle = '',
+  bookAuthor = '',
+  bookPages = 0,
+  bookHaveRead = false
+) {
+  this.title = bookTitle;
+  this.author = bookAuthor;
+  this.pages = bookPages;
+  this.haveRead = bookHaveRead;
+};
+
+Book.prototype.hasRead = function () {
+  this.haveRead = !this.haveRead;
+  return this;
+};
+
+/** * GETTING THE INPUT VALUES ** */
+const getFormInput = () =>
+  new Book(title.value, author.value, pages.value, haveRead.checked);
+
+/** ADD BOOK FORM SUBMISSION * */
+addBookForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const newBook = getFormInput();
+  myLibrary.push(newBook);
+  booksContainer.innerHTML = '';
+  displayBooks();
+  title.value = '';
+  author.value = '';
+  pages.value = '';
+  haveRead.checked = false;
+  closeModal();
+});
+
+/** *  Event delegation for (status, delete) ** */
+booksContainer.addEventListener('click', (e) => {
+  if (e.target.type === 'checkbox') {
+    myLibrary[parseInt(e.target.id, 10)].hasRead();
+    displayBooks();
+  } else if (e.target.classList.contains('btn-del')) {
+    myLibrary.splice(parseInt(e.target.id, 10), 1);
+    deleted += 1;
+    numDeleted.textContent = deleted;
+    displayBooks();
+  }
+});
