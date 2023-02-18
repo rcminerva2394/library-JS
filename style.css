@@ -181,6 +181,9 @@ label {
   background-color: #0053f8cf;
 }
 
+input[type='checkbox'] {
+  margin-right: 0.5rem;
+}
 /* To show or not to show the modal form*/
 .hidden {
   display: none;
