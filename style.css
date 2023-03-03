@@ -68,7 +68,7 @@ h1 {
 /* Reusable grid*/
 .grid {
   display: grid;
-  grid-template-columns: 2fr 1.5fr 1fr 1.25fr 1fr;
+  grid-template-columns: 1.5fr 1.5fr 1.5fr 1fr 1.25fr 0.5fr;
   align-items: center;
 }
 

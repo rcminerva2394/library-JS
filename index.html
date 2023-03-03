@@ -55,6 +55,7 @@
         <div class="grid books-heading">
           <span>title</span>
           <span>author</span>
+          <span>publication year</span>
           <span>pages</span>
           <span>status</span>
           <span>&nbsp;</span>
@@ -89,12 +90,22 @@
               <input id="book-title" type="text" class="input title" />
               <label for="book-author"> Author </label>
               <input id="book-author" type="text" class="input author" />
+                <label for="book-date"> Year of publication </label>
+              <input id="book-date" type="number" class="input date" />
               <label for="book-pages"> Pages </label>
               <input id="book-pages" type="number" class="input pages" />
+              <label for="book-duration"> Duration</label>
+              <input id="book-duration" type="text" class="input duration" />
             </div>
+            <select id="book-type">
+              <option value="">Book type</option>
+              <option value="audio">Audio book</option>
+              <option value="ebook">Ebook</option>
+              <option value="printed">Printed Book</option>
+            </select>
             <div>
               <input id="book-status" type="checkbox" class="input status" />
-              <label for="book-status"> Have you read it? </label>
+              <label for="book-status"> Did you finish it?</label>
             </div>
             <button type="submit" class="btn-submit">Submit</button>
           </form>

@@ -6,8 +6,11 @@ const booksContainer = document.querySelector('.books-items');
 const addBookForm = document.querySelector('.add-book-form');
 const title = document.querySelector('#book-title');
 const author = document.querySelector('#book-author');
+const date = document.querySelector('#book-date');
 const pages = document.querySelector('#book-pages');
-const haveRead = document.querySelector('#book-status');
+const duration = document.querySelector('#book-duration');
+const haveFinished = document.querySelector('#book-status');
+const bookType = document.querySelector('#book-type');
 const numBooks = document.querySelector('.num.total-books');
 const numUnread = document.querySelector('.num.unread-books');
 const numRead = document.querySelector('.num.read-books');
@@ -47,18 +50,79 @@ DOMFactoryEl.prototype.addChildren = function (...children) {
 const Book = function (
   bookTitle = '',
   bookAuthor = '',
-  bookPages = 0,
-  bookHaveRead = false
+  bookDate = '',
+  bookStatus = false
 ) {
   this.title = bookTitle;
   this.author = bookAuthor;
-  this.pages = bookPages;
-  this.haveRead = bookHaveRead;
+  this.date = bookDate;
+  this.haveFinished = bookStatus;
 };
 
 Book.prototype.hasRead = function () {
-  this.haveRead = !this.haveRead;
+  this.haveFinished = !this.haveFinished;
 };
+
+const AudioBook = function (
+  bookTitle,
+  bookAuthor,
+  bookDate,
+  bookStatus,
+  bookDuration
+) {
+  Book.call(this, bookTitle, bookAuthor, bookDate, bookStatus, duration);
+  this.duration = bookDuration;
+};
+
+AudioBook.prototype = Object.create(Book.prototype); // Object create to inherit the methods of the Book in the prototype
+
+AudioBook.prototype.listen = function () {
+  console.log('This is an audio book');
+};
+
+// SAMPLE
+const HarryPot = new AudioBook(
+  'Harry Ngongo',
+  'JK Rowling',
+  2005,
+  false,
+  '1 hour'
+);
+console.log(HarryPot);
+
+const PrintedBook = function (
+  bookTitle,
+  bookAuthor,
+  bookDate,
+  bookStatus,
+  bookPages
+) {
+  Book.call(this, bookTitle, bookAuthor, bookDate, bookStatus, bookPages);
+  this.pages = pages;
+};
+
+PrintedBook.prototype.read = function () {
+  console.log('This is a printed book!');
+};
+
+PrintedBook.prototype = Object.create(Book.prototype);
+
+// SAMPLE BOOK
+const realBook = new PrintedBook('RC Life', 'RC Minerva', 2099, false, 98755);
+console.log(realBook);
+
+const Ebook = function (bookTitle, bookAuthor, bookDate, bookStatus, format) {
+  Book.call(this, bookTitle, bookAuthor, bookDate, bookStatus);
+  this.format = format;
+};
+
+Ebook.prototype.readOnline = function () {
+  console.log('This is an ebook!');
+};
+
+// SAMPLE EBOOK
+const ebook = new Ebook('RC Life', 'RC Minerva', 2099, false, 'EPUB');
+console.log(ebook);
 
 const Library = function () {
   this.books = [];
@@ -104,6 +168,8 @@ const displayBooks = () => {
     bookTitle.setText(book.title);
     const bookAuthor = new DOMFactoryEl('span');
     bookAuthor.setText(book.author);
+    const bookDate = new DOMFactoryEl('span');
+    bookDate.setText(book.date);
     const bookPages = new DOMFactoryEl('span');
     bookPages.setText(book.pages);
     const checkbox = new DOMFactoryEl('div');
@@ -119,7 +185,14 @@ const displayBooks = () => {
     const btnDelEl = new DOMFactoryEl('button');
     btnDelEl.setAttributes({ class: 'btn btn-del' });
     btnDelEl.setText('del');
-    bookItem.addChildren(bookTitle, bookAuthor, bookPages, checkbox, btnDelEl);
+    bookItem.addChildren(
+      bookTitle,
+      bookAuthor,
+      bookDate,
+      bookPages,
+      checkbox,
+      btnDelEl
+    );
     bookItem.appendTo(booksContainer);
   });
 
@@ -132,7 +205,13 @@ displayBooks();
 
 /** * GETTING THE INPUT VALUES ** */
 const getFormInput = () =>
-  new Book(title.value, author.value, pages.value, haveRead.checked);
+  new Book(
+    title.value,
+    author.value,
+    date.value,
+    pages.value,
+    haveRead.checked
+  );
 
 /** ADD BOOK FORM SUBMISSION * */
 addBookForm.addEventListener('submit', (e) => {
@@ -144,6 +223,7 @@ addBookForm.addEventListener('submit', (e) => {
   title.value = '';
   author.value = '';
   pages.value = '';
+  date.value = '';
   haveRead.checked = false;
   closeModal();
 });
