@@ -10,7 +10,8 @@ const date = document.querySelector('#book-date');
 const pages = document.querySelector('#book-pages');
 const duration = document.querySelector('#book-duration');
 const haveFinished = document.querySelector('#book-status');
-const bookType = document.querySelector('#book-type');
+const type = document.querySelector('#book-type');
+const ebookFormat = document.querySelector('#ebook-format');
 const numBooks = document.querySelector('.num.total-books');
 const numUnread = document.querySelector('.num.unread-books');
 const numRead = document.querySelector('.num.read-books');
@@ -19,8 +20,8 @@ const numDeleted = document.querySelector('.num.deleted-books');
 let deleted = 0;
 
 /** OOP DOM ELEMENT HELPER */
-const DOMFactoryEl = function (type) {
-  this.domElement = document.createElement(type);
+const DOMFactoryEl = function (Eltype) {
+  this.domElement = document.createElement(Eltype);
   this.children = [];
 };
 
@@ -48,11 +49,13 @@ DOMFactoryEl.prototype.addChildren = function (...children) {
 /** ************ OOP BOOK AND LIBRARY ************ */
 // Function constructor
 const Book = function (
+  bookType = '',
   bookTitle = '',
   bookAuthor = '',
   bookDate = '',
   bookStatus = false
 ) {
+  this.type = bookType;
   this.title = bookTitle;
   this.author = bookAuthor;
   this.date = bookDate;
@@ -64,65 +67,63 @@ Book.prototype.hasRead = function () {
 };
 
 const AudioBook = function (
+  bookType,
   bookTitle,
   bookAuthor,
   bookDate,
   bookStatus,
   bookDuration
 ) {
-  Book.call(this, bookTitle, bookAuthor, bookDate, bookStatus, duration);
+  Book.call(
+    this,
+    bookType,
+    bookTitle,
+    bookAuthor,
+    bookDate,
+    bookStatus,
+    duration
+  );
   this.duration = bookDuration;
 };
 
-AudioBook.prototype = Object.create(Book.prototype); // Object create to inherit the methods of the Book in the prototype
-
-AudioBook.prototype.listen = function () {
-  console.log('This is an audio book');
-};
-
-// SAMPLE
-const HarryPot = new AudioBook(
-  'Harry Ngongo',
-  'JK Rowling',
-  2005,
-  false,
-  '1 hour'
-);
-console.log(HarryPot);
+// Object create to inherit the methods of the Book in the prototype which is the  haveFinished
+AudioBook.prototype = Object.create(Book.prototype);
 
 const PrintedBook = function (
+  bookType,
   bookTitle,
   bookAuthor,
   bookDate,
   bookStatus,
   bookPages
 ) {
-  Book.call(this, bookTitle, bookAuthor, bookDate, bookStatus, bookPages);
-  this.pages = pages;
-};
-
-PrintedBook.prototype.read = function () {
-  console.log('This is a printed book!');
+  Book.call(
+    this,
+    bookType,
+    bookTitle,
+    bookAuthor,
+    bookDate,
+    bookStatus,
+    bookPages
+  );
+  this.pages = bookPages;
 };
 
 PrintedBook.prototype = Object.create(Book.prototype);
 
-// SAMPLE BOOK
-const realBook = new PrintedBook('RC Life', 'RC Minerva', 2099, false, 98755);
-console.log(realBook);
-
-const Ebook = function (bookTitle, bookAuthor, bookDate, bookStatus, format) {
-  Book.call(this, bookTitle, bookAuthor, bookDate, bookStatus);
-  this.format = format;
+const Ebook = function (
+  bookType,
+  bookTitle,
+  bookAuthor,
+  bookDate,
+  bookStatus,
+  bookFormat
+) {
+  Book.call(this, bookType, bookTitle, bookAuthor, bookDate, bookStatus);
+  this.format = bookFormat;
 };
 
-Ebook.prototype.readOnline = function () {
-  console.log('This is an ebook!');
-};
-
-// SAMPLE EBOOK
-const ebook = new Ebook('RC Life', 'RC Minerva', 2099, false, 'EPUB');
-console.log(ebook);
+Ebook.prototype = Object.create(Book.prototype);
 
 const Library = function () {
   this.books = [];
@@ -157,13 +158,15 @@ const displayBooks = () => {
   let unReadBooks = 0;
   let readBooks = 0;
   myLibrary.books.forEach((book) => {
-    if (book.haveRead === false) {
+    if (book.haveFinished === false) {
       unReadBooks += 1;
-    } else if (book.haveRead === true) {
+    } else if (book.haveFinished === true) {
       readBooks += 1;
     }
     const bookItem = new DOMFactoryEl('div');
     bookItem.setAttributes({ class: 'book-item grid' });
+    const bookType = new DOMFactoryEl('span');
+    bookType.setText(book.type);
     const bookTitle = new DOMFactoryEl('span');
     bookTitle.setText(book.title);
     const bookAuthor = new DOMFactoryEl('span');
@@ -177,20 +180,27 @@ const displayBooks = () => {
     inputCheck.setAttributes({
       type: 'checkbox',
       id: book.title,
-      ...(book.haveRead && { checked: true }),
+      ...(book.haveFinished && { checked: true }),
     });
     const statusText = new DOMFactoryEl('span');
-    statusText.setText('Read');
+    statusText.setText('Done');
     checkbox.addChildren(inputCheck, statusText);
+    const bookDuration = new DOMFactoryEl('span');
+    bookDuration.setText(book.duration);
+    const bookFormat = new DOMFactoryEl('span');
+    bookFormat.setText(book.format);
     const btnDelEl = new DOMFactoryEl('button');
     btnDelEl.setAttributes({ class: 'btn btn-del' });
     btnDelEl.setText('del');
     bookItem.addChildren(
+      bookType,
       bookTitle,
       bookAuthor,
       bookDate,
       bookPages,
       checkbox,
+      bookDuration,
+      bookFormat,
       btnDelEl
     );
     bookItem.appendTo(booksContainer);
@@ -203,28 +213,53 @@ const displayBooks = () => {
 
 displayBooks();
 
-/** * GETTING THE INPUT VALUES ** */
-const getFormInput = () =>
-  new Book(
-    title.value,
-    author.value,
-    date.value,
-    pages.value,
-    haveRead.checked
-  );
+const getBookInput = () => {
+  let book;
+  if (type.value === 'audio') {
+    book = new AudioBook(
+      'Audio',
+      title.value,
+      author.value,
+      date.value,
+      haveFinished.checked,
+      duration.value
+    );
+  } else if (type.value === 'ebook') {
+    book = new Ebook(
+      'Ebook',
+      title.value,
+      author.value,
+      date.value,
+      haveFinished.checked,
+      ebookFormat.value
+    );
+  } else if (type.value === 'printed') {
+    book = new PrintedBook(
+      'Printed',
+      title.value,
+      author.value,
+      date.value,
+      haveFinished.checked,
+      pages.value
+    );
+  }
+  return book;
+};
 
 /** ADD BOOK FORM SUBMISSION * */
 addBookForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  const newBook = getFormInput();
-  myLibrary.addBook(newBook);
+  myLibrary.addBook(getBookInput());
   booksContainer.innerHTML = '';
   displayBooks();
   title.value = '';
   author.value = '';
   pages.value = '';
   date.value = '';
-  haveRead.checked = false;
+  duration.value = '';
+  type.value = '';
+  ebookFormat.value = '';
+  haveFinished.checked = false;
   closeModal();
 });
 

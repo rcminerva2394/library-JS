@@ -39,11 +39,11 @@
         </div>
         <div class="stat unread-books">
           <span class="num unread-books">0</span>
-          <p class="description">Unread Books</p>
+          <p class="description">Unfinished Books</p>
         </div>
         <div class="stat read-books">
           <span class="num read-books">0</span>
-          <p class="description">Read Books</p>
+          <p class="description">Finished Books</p>
         </div>
         <div class="stat deleted-books">
           <span class="num deleted-books">0</span>
@@ -53,11 +53,14 @@
 
       <section class="books-container">
         <div class="grid books-heading">
+          <span>type</span>
           <span>title</span>
           <span>author</span>
-          <span>publication year</span>
+          <span>year</span>
           <span>pages</span>
           <span>status</span>
+          <span>duration</span>
+          <span>format</span>
           <span>&nbsp;</span>
         </div>
 
@@ -86,6 +89,7 @@
           </button>
           <form class="add-book-form">
             <div class="add-book-inputs">
+              
               <label for="book-title"> Title </label>
               <input id="book-title" type="text" class="input title" />
               <label for="book-author"> Author </label>
@@ -94,20 +98,32 @@
               <input id="book-date" type="number" class="input date" />
               <label for="book-pages"> Pages </label>
               <input id="book-pages" type="number" class="input pages" />
-              <label for="book-duration"> Duration</label>
-              <input id="book-duration" type="text" class="input duration" />
+              <label for="book-duration"> Duration(for audiobook only)</label>
+              <input id="book-duration" type="text" class="input duration"  placeholder="E.g 1 hr and 30 mins" />
             </div>
-            <select id="book-type">
+        <div class="select-format-bookType">
+           <select id="book-type">
               <option value="">Book type</option>
               <option value="audio">Audio book</option>
               <option value="ebook">Ebook</option>
               <option value="printed">Printed Book</option>
             </select>
-            <div>
-              <input id="book-status" type="checkbox" class="input status" />
-              <label for="book-status"> Did you finish it?</label>
+              <select id="ebook-format">
+              <option value="" selected>Ebook format</option>
+              <option value="epub">EPUB</option>
+              <option value="doc">Doc</option>
+              <option value="pdf">PDF</option>
+              <option value="txt">TXT</option>
+                <option value="mobi">MOBI</option>
+            </select>
+
+        </div>
+           
+             <div class=""><input id="book-status" type="checkbox" class="input status" />
+              <label for="book-status"> Did you finish it?</label></div>
+               <button type="submit" class="btn-submit">Submit</button>
             </div>
-            <button type="submit" class="btn-submit">Submit</button>
+           
           </form>
         </div>
       </section>
